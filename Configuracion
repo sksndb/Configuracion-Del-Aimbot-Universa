@@ -1,0 +1,461 @@
+-- Centro Owen Xit | Aimbot + ESP (OPTIMIZADO FPS - SIN LAG CON MUCHOS JUGADORES)
+-- Clave CONECTADA REMOTAMENTE a https://pastebin.com/raw/h7RQseud
+-- Cambia la tecla editando SOLO ese pastebin, sin tocar este script
+ 
+KeySystemEnabled local = verdadero
+URL de clave local = "https://pastebin.com/raw/h7RQseud"
+ 
+-- Descarga la clave remota (con fallback si falla internet o pastebin)
+local CorrectKey = "fallback_key" -- por si no carga
+pcall(función()
+    respuesta local = juego:HttpGet(KeyUrl, true) -- true = sin caché
+    si respuesta y respuesta ~= "" entonces
+        ClaveCorrecta = respuesta:coincidencia("^%s*(.-)%s*$") o ClaveCorrecta
+    fin
+fin)
+ 
+-- Archivo local para persistir (no pide clave cada salto de servidor)
+Archivo de clave local = "owen_xit_key.txt"
+ 
+función local LoadSavedKey()
+    si isfile y isfile(KeyFile) entonces
+        contenido local = readfile(KeyFile)
+        devolver contenido:coincidencia("^%s*(.-)%s*$") o ""
+    fin
+    devolver cero
+fin
+ 
+función local SaveKey(tecla)
+    Si escribe archivo entonces
+        escribirarchivo(ArchivoClave, clave)
+    fin
+fin
+ 
+clave guardada local = CargarClaveGuardada()
+ 
+Si KeySystemEnabled y savedKey ~= CorrectKey entonces
+    local ingresado = falso
+ 
+    ScreenGui local = Instancia.new("ScreenGui")
+    ScreenGui.Parent = juego.CoreGui
+    ScreenGui.Name = "OwenKeyGui"
+    ScreenGui.ResetOnSpawn = falso
+ 
+    Marco local = Instancia.new("Marco")
+    Marco.Tamaño = UDim2.new(0, 300, 0, 180)
+    Marco.Posición = UDim2.new(0.5, -150, 0.5, -90)
+    Marco.ColorDeFondo3 = Color3.fromRGB(30, 30, 30)
+    Marco.BorderSizePixel = 0
+    Marco.Padre = ScreenGui
+ 
+    Título local = Instancia.new("TextLabel")
+    Título.Tamaño = UDim2.new(1, 0, 0, 40)
+    Título.Transparencia de fondo = 1
+    Título.Texto = "Owen Xit Hub - Sistema de llaves (Remota)"
+    Título.TextColor3 = Color3.fromRGB(255, 100, 100)
+    Título.TextSize = 24
+    Título.Fuente = Enumeración.Fuente.SourceSansBold
+    Título.Padre = Marco
+ 
+    cuadro de entrada local = Instancia.new("Cuadro de texto")
+    InputBox.Tamaño = UDim2.nuevo(0.8, 0, 0, 40)
+    InputBox.Position = UDim2.new(0.1, 0, 0.3, 0)
+    InputBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    InputBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    InputBox.PlaceholderText = "Ingresa la clave..."
+    Cuadro de entrada.Texto = ""
+    InputBox.Font = Enumeración.Font.SourceSans
+    InputBox.TextSize = 18
+    InputBox.Parent = Marco
+ 
+    Botón de envío local = Instancia.new("Botón de texto")
+    Botón de envío.Tamaño = UDim2.nuevo(0.8, 0, 0, 40)
+    Botón de envío.Posición = UDim2.new(0.1, 0, 0.55, 0)
+    Botón de envío.ColorDeFondo3 = Color3.fromRGB(0, 170, 255)
+    Botón de envío.TextoColor3 = Color3.fromRGB(255, 255, 255)
+    SubmitButton.Text = "Verificar clave"
+    Botón de envío.Fuente = Enumeración.Fuente.SourceSansBold
+    Botón de envío.TextSize = 20
+    Botón de envío.Padre = Marco
+ 
+    Estado local = Instancia.new("TextLabel")
+    Estado.Tamaño = UDim2.new(0.8, 0, 0, 30)
+    Estado.Posición = UDim2.new(0.1, 0, 0.8, 0)
+    Estado.Transparencia de fondo = 1
+    Estado.Texto = ""
+    Estado.TextColor3 = Color3.fromRGB(255, 80, 80)
+    Estado.TextSize = 16
+    Estado.Fuente = Enumeración.Fuente.SourceSans
+    Estado.Padre = Marco
+ 
+    función local CheckKey(keyInput)
+        si keyInput == CorrectKey entonces
+            Guardar clave (entrada de clave)
+            ingresado = verdadero
+            Status.Text = "¡Clave correcta! Cargando... (guardada)"
+            Estado.TextColor3 = Color3.fromRGB(0, 255, 100)
+            esperar(1.5)
+            ScreenGui:Destruir()
+        demás
+            Status.Text = "Clave incorrecta. Intento de nuevo."
+            Cuadro de entrada.Texto = ""
+        fin
+    fin
+ 
+    InputBox.FocusLost:Conectar(función(enterPressed)
+        Si se presiona Enter, entonces CheckKey(InputBox.Text) finaliza
+    fin)
+ 
+    Botón de envío.Botón del ratón1Clic:Conectar(función()
+        CheckKey(Cuadro de entrada.Texto)
+    fin)
+ 
+    repetir la tarea.wait() hasta que se ingrese o no ScreenGui.Parent
+    Si no se ingresa, regrese al final
+fin
+ 
+-- ────────────────────────────────────────────────────────────────
+--GUIÓN PRINCIPAL
+-- ────────────────────────────────────────────────────────────────
+ 
+Rayfield local = loadstring(juego:HttpGet('https://sirius.menu/rayfield'))()
+ 
+Ventana local = Rayfield:CreateWindow({
+   Nombre = "Owen Xit Hub",
+   LoadingTitle = "El Mejor Hub Del Momento",
+   LoadingSubtitle = "Cargando el mejor hub...",
+   Guardado de configuración = {
+      Habilitado = verdadero,
+      NombreDeCarpeta = "RayfieldConfigs",
+      Nombre del archivo = "OwenXitHub"
+   },
+   KeySystem = falso
+})
+ 
+local AimbotTab = Ventana:CreateTab("🎯 Aimbot", 4483362458)
+VisualsTab local = Ventana:CreateTab("🎨 Visuals", 4483362458)
+PestañaConfiguración local = Ventana:CrearPestaña("⚙️ Configuración", 4483362456)
+ 
+getgenv().ExunysDeveloperAimbot = {
+   Configuración del desarrollador = {RainbowSpeed ​​= 1},
+   Configuración = {
+      Habilitado = verdadero, TeamCheck = falso, AliveCheck = verdadero, WallCheck = falso,
+      Sensibilidad = 0, Sensibilidad2 = 3.5, Modo de bloqueo = 1, Parte de bloqueo = "Cabeza",
+      TriggerKey = Enum.UserInputType.MouseButton2, Toggle = falso
+   },
+   Ajustes de campo de visión = {
+      Habilitado = verdadero, Visible = verdadero, Radio = 90, NumSides = 60, Grosor = 1,
+      Transparencia = 1, Relleno = falso, RainbowColor = falso, RainbowOutlineColor = falso,
+      Color = Color3.fromRGB(255, 255, 255), ColorDeContorno = Color3.fromRGB(0, 0, 0),
+      ColorBloqueado = Color3.fromRGB(255, 150, 150)
+   },
+   En la lista negra = {},
+   FOVCircleOutline = Dibujo.new("Círculo"),
+   FOVCircle = Dibujo.new("Círculo")
+}
+ 
+Env local = getgenv().ExunysDeveloperAimbot
+Jugadores locales = juego:GetService("Jugadores")
+RunService local = juego:GetService("RunService")
+UIS local = juego:GetService("UserInputService")
+ServicioTween local = juego:GetService("ServicioTween")
+LP local = Jugadores.JugadorLocal
+Cámara local = espacio de trabajo.CurrentCamera
+ 
+Env.FOVCircle.Visible = falso
+Env.FOVCircleOutline.Visible = falso
+ 
+Distancia requerida local, mecanografía, ejecución, intervalo actual = 2000, falso, falso, nulo
+Contador de fotogramas local = 0
+ 
+Ajustes ESP locales = {
+   Habilitado = falso, Casillas = verdadero, Trazadores = verdadero, Nombres = verdadero, Esqueleto = verdadero, Barras de salud = verdadero,
+   TeamCheck = verdadero, Arcoíris = falso, Color = Color3.fromRGB(255, 0, 255),
+   Grosor = 2, Tamaño del texto = 16, Distancia máxima = 300
+}
+ 
+objetos ESP locales = {}
+Enlaces R15 locales = {{"Cabeza","Torso superior"}, {"Torso superior","Torso inferior"}, {"Torso inferior","Pierna superior izquierda"}, {"Pierna superior izquierda","Pierna inferior izquierda"}, {"Pierna inferior izquierda","Pie izquierdo"}, {"Torso inferior","Pierna superior derecha"}, {"Pierna superior derecha","Pierna inferior derecha"}, {"Pierna inferior derecha","Pie derecho"}, {"Torso superior","Brazo superior izquierdo"}, {"Brazo superior izquierdo","Brazo inferior izquierdo"}, {"Brazo inferior izquierdo","Mano izquierda"}, {"Torso superior","Brazo superior derecho"}, {"Brazo superior derecho","Brazo inferior derecho"}, {"Brazo inferior derecho","Mano derecha"}}
+Enlaces R6 locales = {{"Cabeza","Torso"}, {"Torso","Brazo izquierdo"}, {"Torso","Brazo derecho"}, {"Torso","Pierna izquierda"}, {"Torso","Pierna derecha"}}
+ 
+función local CreateESP(p)
+   si ESPObjects[p] entonces devuelve fin
+   carácter local = p.Carácter o p.CarácterAñadido:Espera()
+   Si no es char entonces devuelve fin
+   datos locales = {Enlaces = char:FindFirstChild("UpperTorso") y R15Links o R6Links}
+   si ESPSettings.Boxes entonces datos.Box = Drawing.new("Square") datos.Box.Filled = false datos.Box.Transparency = 1 datos.Box.Thickness = ESPSettings.Thickness fin
+   si ESPSettings.Tracers entonces datos.Tracer = Drawing.new("Línea") datos.Tracer.Thickness = 1.5 datos.Tracer.Transparency = 1 fin
+   si ESPSettings.Names entonces datos.Nombre = Dibujo.new("Texto") datos.Nombre.Centro = verdadero datos.Nombre.Contorno = verdadero datos.Nombre.ColorContorno = Color3.new(0,0,0) datos.Nombre.Fuente = 2 datos.Nombre.Tamaño = ESPSettings.TextSize datos.Nombre.Transparencia = 1 fin
+   si ESPSettings.HealthBars entonces
+      datos.HBBG = Dibujo.new("Cuadrado") datos.HBBG.Relleno = verdadero datos.HBBG.Color = Color3.new(0,0,0) datos.HBBG.Transparencia = 0.6
+      datos.HB = Dibujo.new("Cuadrado") datos.HB.Relleno = verdadero datos.HB.Transparencia = 1
+   fin
+   datos.SkelLines = {}
+   si ESPSettings.Skeleton entonces para _ = 1, #data.Links hacer local ln = Drawing.new("Line") ln.Thickness = 1.8 ln.Transparency = 0.7 table.insert(data.SkelLines, ln) fin fin
+   datos.Resaltar = Instancia.new("Resaltar") datos.Resaltar.TransparenciaDeRelleno = 0.4 datos.Resaltar.TransparenciaDeContorno = 0 datos.Resaltar.Padre = Cámara
+   ESPObjects[p] = datos
+fin
+ 
+función local RemoveESP(p)
+   local d = ESPObjects[p] si no es d entonces devuelve fin
+   si d.Box entonces d.Box:Remove() fin si d.Tracer entonces d.Tracer:Remove() fin si d.Name entonces d.Name:Remove() fin
+   si d.HBBG entonces d.HBBG:Eliminar() fin si d.HB entonces d.HB:Eliminar() fin
+   para _, l en ipairs(d.SkelLines o {}) hacer l:Remove() fin si d.Highlight entonces d.Highlight:Destroy() fin
+   ESPObjects[p] = nulo
+fin
+ 
+función local GetClosestPlayer()
+   local s = Env.Settings local visRad = Env.FOVSettings.Radius local intRad = 330 - visRad RequiredDistance = Env.FOVSettings.Enabled y intRad o 2000
+   Local más cercano, dist = nulo, Distancia requerida
+   para _, p en Jugadores:GetPlayers() hacer
+      si p == LP entonces continúa fin local c = p.Carácter local h = c y c:FindFirstChildOfClass("Humanoid")
+      si no (c y h y h.Health > 0 y c:FindFirstChild(s.LockPart)) entonces continúa fin
+      si s.TeamCheck y p.Team == LP.Team entonces continuar fin si table.find(Env.Blacklisted, p.Name) entonces continuar fin
+      parte local = c[s.LockPart]
+      si s.WallCheck entonces
+         partes locales = LP.Character y LP.Character:GetDescendants() o {}
+         para _, v en c:GetDescendants() hacer tabla.insert(partes, v) fin
+         si #Camera:GetPartsObscuringTarget({part.Position}, parts) > 0 entonces continuar fin
+      fin
+      vector local, onScr = Cámara:WorldToViewportPoint(parte.Posición)
+      local d = (UIS:GetMouseLocation() - Vector2.new(vec.X, vec.Y)).Magnitud
+      si d < dist y onScr entonces dist = d Más cercano = p fin
+   fin
+   Regresar más cercano
+fin
+ 
+RunService.Stepped:Connect(función()
+   FrameCounter += 1 si FrameCounter % 3 ~= 0 entonces devuelve fin
+   local f = Env.FOVSettings local s = Env.Settings local fc = Env.FOVCircle local fo = Env.FOVCircleOutline
+   col local = Env.Locked y f.LockedColor o (f.RainbowColor y Color3.fromHSV(tick() % 5, 1, 1) o f.Color)
+   Si f.Enabled y s.Enabled entonces
+      fc.Radio = f.Radio fc.Número de lados = f.Número de lados fc.Espesor = f.Espesor fc.Transparencia = f.Transparencia fc.Relleno = f.Relleno fc.Visible = f.Visible fc.Posición = UIS:GetMouseLocation() fc.Color = col
+      fo.Radio = f.Radio + f.Espesor fo.Número de lados = f.Número de lados fo.Espesor = f.Espesor + 1 fo.Transparencia = f.Transparencia fo.Visible = f.Visible fo.Posición = UIS:GetMouseLocation() fo.Color = f.RainbowOutlineColor y Color3.fromHSV(tick() % 5, 1, 1) o f.OutlineColor
+   de lo contrario fc.Visible = falso fo.Visible = falso fin
+   Si no es ESPSettings.Enabled, devuelve el final.
+   para _, p en Jugadores:GetPlayers() hacer
+      si p == LP entonces continúa fin local c = p.Carácter raíz local = c y c:FindFirstChild("HumanoidRootPart") hum local = c y c:FindFirstChild("Humanoid") cabeza local = c y c:FindFirstChild("Head")
+      si no (raíz y zumbido y cabeza y zumbido. Salud > 0) entonces RemoveESP(p) continuar fin
+      dist local = (LP.Character y LP.Character:FindFirstChild("HumanoidRootPart") y (LP.Character.HumanoidRootPart.Position - root.Position).Magnitude) o 9999
+      si dist > ESPSettings.MaxDistance entonces RemoveESP(p) continuar fin
+      si ESPSettings.TeamCheck y p.Team == LP.Team entonces RemoveESP(p) continúa fin
+      si no ESPObjects[p] entonces CreateESP(p) fin local d = ESPObjects[p]
+      local rPos, onScr = Camera:WorldToViewportPoint(root.Position) si no está en onScr entonces d.Box.Visible = falso d.Tracer.Visible = falso d.Name.Visible = falso si d.HBBG entonces d.HBBG.Visible = falso d.HB.Visible = falso fin para _,l en d.SkelLines hacer l.Visible = falso fin d.Highlight.Enabled = falso continuar fin
+      color local = ESPSettings.Rainbow y Color3.fromHSV((tick()*5 + p.UserId/255)%1,1,1) o ESPSettings.Color local vis = true
+      si d.Box entonces d.Box.Visible = vis y ESPSettings.Boxes d.Box.Color = color local superior = Cámara:WorldToViewportPoint(head.Position + Vector3.new(0,0.5,0)) local inferior = Cámara:WorldToViewportPoint(root.Position - Vector3.new(0,4,0)) local h = math.abs(top.Y - bot.Y) local w = h*0.4 d.Box.Size = Vector2.new(w,h) d.Box.Position = Vector2.new(rPos.X - w/2, superior.Y) fin
+      si d.Tracer entonces d.Tracer.Visible = vis y ESPSettings.Tracers d.Tracer.Color = color d.Tracer.From = Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y*0.95) d.Tracer.To = Vector2.new(rPos.X, rPos.Y + 30) fin
+      si d.Nombre entonces d.Nombre.Visible = vis y ESPSettings.Nombres d.Nombre.Color = color d.Nombre.Texto = p.Nombre.."\n"...math.floor(hum.Salud).." HP | "..math.floor(dist).."u" local hpos = Camera:WorldToViewportPoint(head.Position) d.Nombre.Position = Vector2.new(rPos.X, hpos.Y - 40) fin
+      Si d.HBBG y d.HB entonces
+         d.HBBG.Visible = vis y ESPSettings.HealthBars d.HB.Visible = vis y ESPSettings.HealthBars
+         local superior = Cámara:WorldToViewportPoint(cabeza.Posición) local inferior = Cámara:WorldToViewportPoint(raíz.Posición - Vector3.new(0,4,0)) local barH = math.abs(superior.Y - inferior.Y) local boxW = d.Box y d.Box.Size.X o 50
+         d.HBBG.Posición = Vector2.nuevo(rPos.X + cajaW/2 + 6, superior.Y) d.HBBG.Tamaño = Vector2.nuevo(4, barraH)
+         perc local = hum.Salud / hum.SaludMáxima d.HB.Color = Color3.fromRGB(255*(1-perc), 255*perc, 0) d.HB.Posición = Vector2.nuevo(d.HBBG.Posición.X + 1.5, d.HBBG.Posición.Y + barH*(1-perc)) d.HB.Tamaño = Vector2.nuevo(1, barH*perc)
+      fin
+      si d.SkelLines entonces para i, línea en ipairs(d.SkelLines) hacer par local = d.Links[i] p1 local = c:FindFirstChild(pair[1]) p2 local = c:FindFirstChild(pair[2]) si p1 y p2 entonces v1 local = Camera:WorldToViewportPoint(p1.Position) v2 local = Camera:WorldToViewportPoint(p2.Position) línea.From = Vector2.new(v1.X,v1.Y) línea.To = Vector2.new(v2.X,v2.Y) línea.Color = color línea.Visible = vis y ESPSettings.Skeleton de lo contrario línea.Visible = false fin fin fin
+      d.Resaltar.Adornee = c d.Resaltar.ColorDeRelleno = color d.Resaltar.ColorDeContorno = color d.Resaltar.Habilitado = vis
+   fin
+fin)
+ 
+RunService.Heartbeat:Connect(función()
+   Si no está en ejecución o no está habilitado Env.Settings.Enabled o no está bloqueado, entonces regresa al final
+   carácter local = Env.Locked.Character parte local = char y char:FindFirstChild(Env.Settings.LockPart)
+   si no es parte entonces si CurrentTween entonces CurrentTween:Cancel() CurrentTween = nil fin Env.Locked = nil Running = false retorno fin
+   objetivo local = parte.Posición local scr = Cámara:WorldToViewportPoint(objetivo)
+   si Env.Settings.LockMode == 2 entonces
+      mousemoverel((scr.X - UIS:GetMouseLocation().X)/Env.Settings.Sensitivity2, (scr.Y - UIS:GetMouseLocation().Y)/Env.Settings.Sensitivity2)
+   demás
+      si Env.Settings.Sensitivity > 0 entonces
+         si CurrentTween entonces CurrentTween:Cancelar() fin
+         CurrentTween = TweenService:Create(Cámara, TweenInfo.new(Env.Settings.Sensibilidad, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {CFrame = CFrame.new(Cámara.CFrame.Posición, objetivo)})
+         Interpolación actual: Reproducir()
+      de lo contrario Cámara.CFrame = CFrame.new(Cámara.CFrame.Posición, objetivo) fin
+   fin
+fin)
+ 
+UIS.InputBegan:Connect(función(entrada)
+   Si escribe, devuelve fin local trig = Env.Settings.TriggerKey
+   si input.UserInputType == trig o input.KeyCode == trig entonces
+      si Env.Settings.Toggle entonces En ejecución = no En ejecución de lo contrario En ejecución = verdadero fin
+      si se está ejecutando, entonces Env.Locked = GetClosestPlayer(); de lo contrario, si CurrentTween, entonces CurrentTween:Cancel() CurrentTween = nil fin Env.Locked = nil fin
+   fin
+fin)
+ 
+UIS.InputEnded:Connect(función(entrada)
+   si Env.Settings.Toggle o Typing entonces devuelve fin local trig = Env.Settings.TriggerKey
+   si entrada.UserInputType == trig o entrada.KeyCode == trig entonces Running = false si CurrentTween entonces CurrentTween:Cancel() CurrentTween = nulo fin Env.Locked = nulo fin
+fin)
+ 
+UIS.TextBoxFocused:Connect(función() Typing = true fin)
+UIS.TextBoxFocusReleased:Connect(función() Typing = false end)
+Jugadores.EliminarJugador:Conectar(EliminarESP)
+ 
+-- ────────────────────────────────────────────────────────────────
+-- INTERFAZ CON FLAGS PARA GUARDAR CONFIGURACIÓN
+-- ────────────────────────────────────────────────────────────────
+ 
+Pestaña Aimbot:CrearAlternar({
+   Nombre = "Habilitar Aimbot",
+   ValorActual = verdadero,
+   Bandera = "Aimbot_Enabled",
+   Devolución de llamada = función(v) Env.Settings.Enabled = v fin
+})
+ 
+Pestaña Aimbot:CrearAlternar({
+   Nombre = "Control de equipo",
+   ValorActual = falso,
+   Bandera = "Aimbot_TeamCheck",
+   Devolución de llamada = función(v) Env.Settings.TeamCheck = v fin
+})
+ 
+Pestaña Aimbot:CrearAlternar({
+   Nombre = "Campo de visión arcoíris",
+   ValorActual = falso,
+   Bandera = "FOV_Arcoíris",
+   Devolución de llamada = función(v) Env.FOVSettings.RainbowColor = v fin
+})
+ 
+Pestaña Aimbot:CreateColorPicker({
+   Nombre = "Color del círculo FOV",
+   Color = Color3.deRGB(255,255,255),
+   Bandera = "FOV_Color",
+   Devolución de llamada = función(c) Env.FOVSettings.Color = c fin
+})
+ 
+Pestaña Aimbot:CreateSlider({
+   Nombre = "Tamaño del campo de visión (1 = SUPER DESCARADO)",
+   Rango = {1, 1000},
+   Incremento = 5,
+   ValorActual = 90,
+   Bandera = "FOV_Radius",
+   Devolución de llamada = función(v) Env.FOVSettings.Radius = v fin
+})
+ 
+Pestaña Aimbot:CreateSlider({
+   Nombre = "Suavidad (0 = instantánea)",
+   Rango = {0,1.5},
+   Incremento = 0,05,
+   ValorActual = 0,
+   Bandera = "Aimbot_Suavidad",
+   Devolución de llamada = función(v) Env.Settings.Sensitivity = v fin
+})
+ 
+Pestaña Visuales:CreateToggle({
+   Nombre = "Habilitar ESP",
+   ValorActual = falso,
+   Bandera = "ESP_Enabled",
+   Devolución de llamada = función(v) ESPSettings.Enabled = v fin
+})
+ 
+Pestaña Visuales:CreateToggle({
+   Nombre = "Cajas",
+   ValorActual = verdadero,
+   Bandera = "ESP_Boxes",
+   Devolución de llamada = función(v) ESPSettings.Boxes = v fin
+})
+ 
+Pestaña Visuales:CreateToggle({
+   Nombre = "Trazadores",
+   ValorActual = verdadero,
+   Bandera = "ESP_Tracers",
+   Devolución de llamada = función(v) ESPSettings.Tracers = v fin
+})
+ 
+Pestaña Visuales:CreateToggle({
+   Nombre = "Nombres + HP + Dist",
+   ValorActual = verdadero,
+   Bandera = "ESP_Names",
+   Devolución de llamada = función(v) ESPSettings.Names = v fin
+})
+ 
+Pestaña Visuales:CreateToggle({
+   Nombre = "Esqueleto",
+   ValorActual = verdadero,
+   Bandera = "ESP_Skeleton",
+   Devolución de llamada = función(v) ESPSettings.Skeleton = v fin
+})
+ 
+Pestaña Visuales:CreateToggle({
+   Nombre = "Barras de salud",
+   ValorActual = verdadero,
+   Bandera = "ESP_HealthBars",
+   Devolución de llamada = función(v) ESPSettings.HealthBars = v fin
+})
+ 
+Pestaña Visuales:CreateToggle({
+   Nombre = "Control de equipo",
+   ValorActual = verdadero,
+   Bandera = "ESP_TeamCheck",
+   Devolución de llamada = función(v) ESPSettings.TeamCheck = v fin
+})
+ 
+Pestaña Visuales:CreateToggle({
+   Nombre = "Colores del arco iris",
+   ValorActual = falso,
+   Bandera = "ESP_Arcoíris",
+   Devolución de llamada = función(v) ESPSettings.Rainbow = v fin
+})
+ 
+Pestaña Visuales:CreateColorPicker({
+   Nombre = "Color ESP",
+   Color = Color3.deRGB(255,0,255),
+   Bandera = "ESP_Color",
+   Devolución de llamada = función(c) ESPSettings.Color = c fin
+})
+ 
+Pestaña Visuales:CreateSlider({
+   Nombre = "Grosor de línea",
+   Rango = {1,5},
+   Incremento = 1,
+   ValorActual = 2,
+   Bandera = "ESP_Espesor",
+   Devolución de llamada = función(v) ESPSettings.Thickness = v fin
+})
+ 
+Pestaña Visuales:CreateSlider({
+   Nombre = "Tamaño del texto",
+   Rango = {12,24},
+   Incremento = 1,
+   ValorActual = 16,
+   Bandera = "ESP_TextSize",
+   Devolución de llamada = función(v) ESPSettings.TextSize = v fin
+})
+ 
+-- Pestaña de configuración
+Pestaña Configuración:BotónCrear({
+   Nombre = "Guardar configuración ahora",
+   Devolución de llamada = función()
+      Rayfield:Guardar configuración()
+      Rayfield:Notify({Title = "Guardado", Content = "Configuración guardada manualmente", Duration = 4})
+   fin
+})
+ 
+Pestaña Configuración:BotónCrear({
+   Nombre = "Cargar Configuración",
+   Devolución de llamada = función()
+      Rayfield:CargarConfiguración()
+      Rayfield:Notify({Title = "Cargado", Content = "Configuración cargada", Duration = 4})
+   fin
+})
+ 
+Pestaña Configuración:BotónCrear({
+   Nombre = "Limpiar solo ESP",
+   Devolución de llamada = función()
+      para p en pares(ESPObjects) hacer RemoveESP(p) fin
+      Rayfield:Notify({Title = "ESP Limpio", Content = "Todos los ESP removidos", Duration = 3})
+   fin
+})
+ 
+Pestaña Configuración:BotónCrear({
+   Nombre = "Restablecer solo Aimbot",
+   Devolución de llamada = función()
+      si CurrentTween entonces CurrentTween:Cancelar() CurrentTween = nil fin
+      Env.Locked = nulo En ejecución = falso
+      Rayfield:Notificar({Título = "Restablecimiento de Aimbot", Contenido = "Bloqueo cancelado", Duración = 3})
+   fin
+})
+ 
+-- Carga automática de configuración al iniciar (si existe)
+Rayfield:CargarConfiguración()
+ 
+print("Owen Xit Hub cargado - Clave remota: " .. KeyUrl .. " = " .. CorrectKey)
+Rayfield:Notify({Title = "¡Bienvenido!", Content = "Key cargada desde Pastebin remoto\nFOV 30 = super descargado\nConfiguración ahora se guarda y carga", Duration = 8})
