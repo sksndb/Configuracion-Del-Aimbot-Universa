@@ -323,7 +323,7 @@ Pestaña Aimbot:CreateColorPicker({
  
 Pestaña Aimbot:CreateSlider({
    Nombre = "Tamaño del campo de visión (1 = SUPER DESCARADO)",
-   Rango = {1, 1000},
+   Rango = {1, 10000},
    Incremento = 5,
    ValorActual = 90,
    Bandera = "FOV_Radius",
